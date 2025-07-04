@@ -11,10 +11,10 @@ import orderRoute from "./Routes/order.route.ts";
 import path from "path";
 dotenv.config();
 
-const app = express();
+
 
 const PORT = process.env.PORT || 3000;
-
+const app = express();
 const DIRNAME = path.resolve();
 // default middelware
 app.use(bodyParser.json({ limit: "10mb" }));
