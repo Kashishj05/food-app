@@ -59,7 +59,7 @@ const userSchema = new mongoose.Schema<IUserDocument>(
     },
     admin: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     // advance authantication
     lastlogin: {

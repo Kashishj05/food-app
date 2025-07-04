@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon server/index.ts",
-    "stripe":"stripe listen --forward-to localhost:8000/api/v1/order/webhook",
-    "build":"npm install && npm install --prefix client && npm run build --prefix client",
+    "stripe": "stripe listen --forward-to localhost:8000/api/v1/order/webhook",
+    "build": "npm install && npm install --prefix client && npm run build --prefix client",
     "start":"nodemon server/index.ts"
   },
   "keywords": [],
@@ -32,6 +32,7 @@
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.13.13",
     "nodemon": "^3.1.9",

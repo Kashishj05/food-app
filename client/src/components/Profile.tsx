@@ -72,7 +72,7 @@ const Profile = () => {
               src={selectedprofilepic}
               className="w-full h-full object-cover object-center rounded-full"
             ></AvatarImage>
-            <AvatarFallback>cn</AvatarFallback>
+            <AvatarFallback></AvatarFallback>
             <input
               ref={imageref}
               className="hidden"
