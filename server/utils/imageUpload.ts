@@ -1,4 +1,4 @@
-import cloudinary from "./cloudinary.ts";
+import cloudinary from "./cloudinary";
 
 const uploadImageOnCloudinary = async (file: Express.Multer.File) => {
   const base64Image = Buffer.from(file.buffer).toString("base64");

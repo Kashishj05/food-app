@@ -7,9 +7,9 @@ import {
   searchRestaurant,
   updateOrderStatus,
   updateRestaurant,
-} from "../controller/restaurant.controller.ts";
-import { isAuthenticated } from "../middlewares/isAuthanticated.middlesware.ts";
-import upload from "../middlewares/multer.ts";
+} from "../controller/restaurant.controller";
+import { isAuthenticated } from "../middlewares/isAuthanticated.middlesware";
+import upload from "../middlewares/multer";
 
 const router = express.Router();
 

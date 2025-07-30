@@ -1,17 +1,15 @@
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./db/connectDB.ts";
+import connectDB from "./db/connectDB";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import userRoute from "./Routes/user.route.ts";
-import restaurantRoute from "./Routes/restaurant.route.ts";
-import menuRoute from "./Routes/menu.route.ts";
-import orderRoute from "./Routes/order.route.ts";
+import userRoute from "./Routes/user.route";
+import restaurantRoute from "./Routes/restaurant.route";
+import menuRoute from "./Routes/menu.route";
+import orderRoute from "./Routes/order.route";
 import path from "path";
 dotenv.config();
-
-
 
 const PORT = process.env.PORT || 3000;
 const app = express();

@@ -3,8 +3,8 @@ import {
   generateResetSuccessEmailHtml,
   generateWelcomeEmailHtml,
   htmlContent,
-} from "./emailhtml.ts";
-import { client, sender } from "./mailtrap.ts";
+} from "./emailhtml";
+import { client, sender } from "./mailtrap";
 
 export const sendVerificationEmail = async (
   email: string,

@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
-import { Restaurant } from "../models/restaurant.model.ts";
+import { Restaurant } from "../models/restaurant.model";
 
-import uploadImageOnCloudinary from "../utils/imageUpload.ts";
-import { Order } from "../models/order.model.ts";
+import uploadImageOnCloudinary from "../utils/imageUpload";
+import { Order } from "../models/order.model";
 
 export const createRestaurant = async (req: Request, res: Response) => {
   try {
@@ -11,14 +11,14 @@ export const createRestaurant = async (req: Request, res: Response) => {
 
     const restaurant = await Restaurant.findOne({ user: req.id });
     if (restaurant) {
-      return res.status(400).json({
+      return void res.status(400).json({
         success: false,
         message: "Restaurant already exist for this user",
       });
       // return;
     }
     if (!file) {
-      return res.status(400).json({
+      return void res.status(400).json({
         success: false,
         message: "Image is required",
       });
@@ -35,13 +35,13 @@ export const createRestaurant = async (req: Request, res: Response) => {
       imageUrl,
     });
 
-    return res.status(201).json({
+    return void res.status(201).json({
       success: true,
       message: "Restaurant added",
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "internal server error" });
+    return void res.status(500).json({ message: "internal server error" });
     // return;
   }
 };
@@ -52,7 +52,7 @@ export const getRestaurant = async (req: Request, res: Response) => {
       "menus"
     );
     if (!restaurant) {
-      return res.status(404).json({
+      return void res.status(404).json({
         success: false,
         restaurant: [],
         messsage: "Restaurant is not found",
@@ -64,11 +64,11 @@ export const getRestaurant = async (req: Request, res: Response) => {
     //   ? restaurant.menus
     //   : Object.values(restaurant.menus);
 
-    return res.status(200).json({ success: true, restaurant });
+    return void res.status(200).json({ success: true, restaurant });
     // return;
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "internal server error" });
+    return void res.status(500).json({ message: "internal server error" });
     // return;
   }
 };
@@ -80,7 +80,7 @@ export const updateRestaurant = async (req: Request, res: Response) => {
     const restaurant = await Restaurant.findOne({ user: req.id });
 
     if (!restaurant) {
-      return res.status(404).json({
+      return void res.status(404).json({
         success: false,
         messsage: "Restaurant is not found",
       });
@@ -102,14 +102,14 @@ export const updateRestaurant = async (req: Request, res: Response) => {
 
     await restaurant.save();
 
-    return res.status(200).json({
+    return void res.status(200).json({
       success: true,
       message: "Restaurant updated",
       restaurant,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "internal server error" });
+    return void res.status(500).json({ message: "internal server error" });
     // return;
   }
 };
@@ -119,7 +119,7 @@ export const getRestaurtantOrder = async (req: Request, res: Response) => {
     const restaurant = await Restaurant.findOne({ user: req.id });
 
     if (!restaurant) {
-      return res.status(404).json({
+      return void res.status(404).json({
         success: false,
         messsage: "Restaurant is not found",
       });
@@ -129,13 +129,13 @@ export const getRestaurtantOrder = async (req: Request, res: Response) => {
     const orders = await Order.find({ restaurant: restaurant._id })
       .populate("restaurant")
       .populate("user");
-    return res.status(200).json({
+    return void res.status(200).json({
       success: true,
       orders,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "internal server error" });
+    return void res.status(500).json({ message: "internal server error" });
     // return;
   }
 };
@@ -146,7 +146,7 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     const { status } = req.body;
     const order = await Order.findById(orderId);
     if (!order) {
-      return res.status(404).json({
+      return void res.status(404).json({
         success: false,
 
         messsage: "order is not found",
@@ -155,14 +155,14 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     }
     order.status = status;
     await order.save();
-    return res.status(200).json({
+    return void res.status(200).json({
       success: true,
       status: order.status,
       message: "Status updated",
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "internal server error" });
+    return void res.status(500).json({ message: "internal server error" });
     // return;
   }
 };
@@ -200,13 +200,13 @@ export const searchRestaurant = async (req: Request, res: Response) => {
 
     // user serach for momo it search momo in selected arry using $in and it retun boolean
     const restaurants = await Restaurant.find(query);
-    return res.status(200).json({
+    return void res.status(200).json({
       success: true,
       data: restaurants,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "internal server error" });
+    return void res.status(500).json({ message: "internal server error" });
     // return;
   }
 };
@@ -220,19 +220,19 @@ export const getSingleRestaurant = async (req: Request, res: Response) => {
     });
 
     if (!restaurant) {
-      return res.status(404).json({
+      return void res.status(404).json({
         success: false,
         message: "Restaurant is not found",
       });
       // return;
     }
-    return res.status(200).json({
+    return void res.status(200).json({
       success: true,
       restaurant,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "internal server error" });
+    return void res.status(500).json({ message: "internal server error" });
     // return;
   }
 };

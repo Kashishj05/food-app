@@ -1,6 +1,6 @@
 import type { Response } from "express";
 import jwt from "jsonwebtoken";
-import type { IUserDocument } from "../models/user.model.ts";
+import type { IUserDocument } from "../models/user.model";
 
 export const generateToken = (res: Response, user: IUserDocument) => {
   const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY!, {

@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { Restaurant } from "../models/restaurant.model.ts";
-import { Order } from "../models/order.model.ts";
+import { Restaurant } from "../models/restaurant.model";
+import { Order } from "../models/order.model";
 import Stripe from "stripe";
 import dotenv from "dotenv";
 dotenv.config();
@@ -29,13 +29,13 @@ export const getOrders = async (req: Request, res: Response) => {
     const orders = await Order.find({ user: req.id })
       .populate("user")
       .populate("restaurant");
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       orders,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: "Internal server error",
     });
@@ -48,7 +48,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       checkOutSessionRequest.restaurantId
     ).populate("menus");
     if (!restaurant) {
-      return res.status(404).json({
+      return void res.status(404).json({
         success: false,
         message: " Restaurant not found",
       });
@@ -80,19 +80,19 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       },
     });
     if (!session.url) {
-      return res.status(400).json({
+      return void res.status(400).json({
         success: false,
         message: "Error while creating session",
       });
     }
     await order.save();
 
-    return res.status(200).json({
+    res.status(200).json({
       session,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({
+    res.status(500).json({
       message: "Internal server error",
     });
   }
@@ -118,7 +118,7 @@ export const stripeWebhook = async (req: Request, res: Response) => {
     event = stripe.webhooks.constructEvent(payloadString, header, secret);
   } catch (error: any) {
     console.error("Webhook error:", error.message);
-    return res.status(400).send(`Webhook error: ${error.message}`);
+    return void res.status(400).send(`Webhook error: ${error.message}`);
   }
 
   // Handle the checkout session completed event
@@ -128,7 +128,7 @@ export const stripeWebhook = async (req: Request, res: Response) => {
       const order = await Order.findById(session.metadata?.orderId);
 
       if (!order) {
-        return res.status(404).json({ message: "Order not found" });
+        return void res.status(404).json({ message: "Order not found" });
       }
 
       // Update the order with the amount and status
@@ -140,7 +140,7 @@ export const stripeWebhook = async (req: Request, res: Response) => {
       await order.save();
     } catch (error) {
       console.error("Error handling event:", error);
-      return res.status(500).json({ message: "Internal Server Error" });
+      return void res.status(500).json({ message: "Internal Server Error" });
     }
   }
   // Send a 200 response to acknowledge receipt of the event

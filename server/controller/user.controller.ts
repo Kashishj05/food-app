@@ -1,16 +1,16 @@
 import type { Request, Response } from "express";
-import { User } from "../models/user.model.ts";
+import { User } from "../models/user.model";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import cloudinary from "../utils/cloudinary.ts";
-import { generateVerificationCode } from "../utils/generateVerificationCode.ts";
-import { generateToken } from "../utils/generateToken.ts";
+import cloudinary from "../utils/cloudinary";
+import { generateVerificationCode } from "../utils/generateVerificationCode";
+import { generateToken } from "../utils/generateToken";
 import {
   sendPasswordResetEmail,
   sendResetSuccessEmail,
   sendVerificationEmail,
   sendWelcomeEmail,
-} from "../mailtrap/email.ts";
+} from "../mailtrap/email";
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -18,7 +18,7 @@ export const signup = async (req: Request, res: Response) => {
 
     let user = await User.findOne({ email });
     if (user) {
-      return res.status(400).json({
+      return void res.status(400).json({
         success: false,
         message: "User already exist with this email",
       });
@@ -42,14 +42,14 @@ export const signup = async (req: Request, res: Response) => {
     const userWithoutPassword = await User.findOne({ email }).select(
       "-password"
     );
-    return res.status(201).json({
+    return void res.status(201).json({
       success: true,
       message: "Account created successfully",
       user: userWithoutPassword,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internet server error" });
+    return void res.status(500).json({ message: "Internet server error" });
   }
 };
 
@@ -59,7 +59,7 @@ export const login = async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({
+      return void res.status(400).json({
         success: false,
         message: "Incorrect email or password",
       });
@@ -68,7 +68,7 @@ export const login = async (req: Request, res: Response) => {
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
-      return res.status(400).json({
+      return void res.status(400).json({
         success: false,
         message: "Incorrect email or password",
       });
@@ -83,14 +83,16 @@ export const login = async (req: Request, res: Response) => {
     const userWithoutPassword = await User.findOne({ email }).select(
       "-password"
     );
-    return res.status(200).json({
+    return void res.status(200).json({
       success: true,
       message: `Welcome back ${user.fullname}`,
       user: userWithoutPassword,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internet server error", error });
+    return void res
+      .status(500)
+      .json({ message: "Internet server error", error });
   }
 };
 
@@ -104,7 +106,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     }).select("-password");
 
     if (!user) {
-      return res.status(400).json({
+      return void res.status(400).json({
         success: false,
         message: "Invalid or expire verification token",
       });
@@ -118,26 +120,26 @@ export const verifyEmail = async (req: Request, res: Response) => {
     // send welcome email
     await sendWelcomeEmail(user.email, user.fullname);
 
-    return res.status(200).json({
+    return void res.status(200).json({
       success: true,
       message: "Email verified successfully",
       user,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internet server error" });
+    return void res.status(500).json({ message: "Internet server error" });
   }
 };
 
 export const logout = async (req: Request, res: Response) => {
   try {
-    return res.clearCookie("token").status(200).json({
+    return void res.clearCookie("token").status(200).json({
       success: true,
       message: "logged out successfully",
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internet server error" });
+    return void res.status(500).json({ message: "Internet server error" });
   }
 };
 
@@ -146,7 +148,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(200).json({
+      return void res.status(200).json({
         success: false,
         message: "User does not exist",
       });
@@ -164,13 +166,13 @@ export const forgotPassword = async (req: Request, res: Response) => {
       `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`
     );
 
-    return res.status(200).json({
+    return void res.status(200).json({
       success: true,
       message: "Password reset link sent to your email",
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internet server error" });
+    return void res.status(500).json({ message: "Internet server error" });
   }
 };
 
@@ -184,7 +186,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      return res.status(400).json({
+      return void res.status(400).json({
         success: false,
         message: "Invalid or expire verification resetToken",
       });
@@ -201,13 +203,13 @@ export const resetPassword = async (req: Request, res: Response) => {
     //send reset success email
     await sendResetSuccessEmail(user.email);
 
-    return res.status(200).json({
+    return void res.status(200).json({
       success: true,
       message: "Password reset successfully",
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internet server error" });
+    return void res.status(500).json({ message: "Internet server error" });
   }
 };
 
@@ -216,20 +218,20 @@ export const checkAuth = async (req: Request, res: Response) => {
     const userId = req.id;
     const user = await User.findById(userId).select("-password");
     if (!user) {
-      return res.status(404).json({
+      return void res.status(404).json({
         success: false,
         message: "user is not found",
       });
       // return;
     }
-    return res.status(200).json({
+    return void res.status(200).json({
       success: true,
       user,
     });
     // return;
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internet server error" });
+    return void res.status(500).json({ message: "Internet server error" });
   }
 };
 
@@ -254,13 +256,13 @@ export const updateprofile = async (req: Request, res: Response) => {
       new: true,
     }).select("-password");
 
-    return res.status(200).json({
+    return void res.status(200).json({
       success: true,
       user,
       message: " Profile updated successfully",
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internal server error" });
+    return void res.status(500).json({ message: "Internal server error" });
   }
 };

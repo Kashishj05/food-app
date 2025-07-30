@@ -8,8 +8,8 @@ import {
   signup,
   updateprofile,
   verifyEmail,
-} from "../controller/user.controller.ts";
-import { isAuthenticated } from "../middlewares/isAuthanticated.middlesware.ts";
+} from "../controller/user.controller";
+import { isAuthenticated } from "../middlewares/isAuthanticated.middlesware";
 const router = express.Router();
 
 router.route("/check-auth").get(isAuthenticated, checkAuth);

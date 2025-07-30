@@ -1,8 +1,8 @@
 import express from "express";
 
-import { isAuthenticated } from "../middlewares/isAuthanticated.middlesware.ts";
-import upload from "../middlewares/multer.ts";
-import { addMenu, editMenu } from "../controller/menu.controller.ts";
+import { isAuthenticated } from "../middlewares/isAuthanticated.middlesware";
+import upload from "../middlewares/multer";
+import { addMenu, editMenu } from "../controller/menu.controller";
 
 const router = express.Router();
 
