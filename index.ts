@@ -20,7 +20,10 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.json());
 app.use(cookieParser());
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: [
+    "http://localhost:5173",
+    "https://food-app-server-hk06.onrender.com",
+  ],
   credentials: true,
 };
 app.use(cors(corsOptions));
