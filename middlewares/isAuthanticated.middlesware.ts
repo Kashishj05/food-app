@@ -17,7 +17,7 @@ export const isAuthenticated = async (
   try {
     const token = req.cookies.token;
     if (!token) {
-      res.status(401).json({
+      return void res.status(401).json({
         success: false,
         message: "User not authenticated",
       });
@@ -26,7 +26,7 @@ export const isAuthenticated = async (
     const decode = jwt.verify(token, process.env.SECRET_KEY!) as jwt.JwtPayload;
     //check if decoding was successfull
     if (!decode) {
-      res.status(401).json({
+      return void res.status(401).json({
         success: false,
         message: " Invalid token",
       });
@@ -35,7 +35,7 @@ export const isAuthenticated = async (
     req.id = decode.userId;
     next();
   } catch (error) {
-    res.status(500).json({
+    return void res.status(500).json({
       message: "internal server error",
     });
   }

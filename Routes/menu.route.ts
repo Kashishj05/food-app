@@ -2,7 +2,7 @@ import express from "express";
 
 import { isAuthenticated } from "../middlewares/isAuthanticated.middlesware";
 import upload from "../middlewares/multer";
-import { addMenu, editMenu } from "../controller/menu.controller";
+import { addMenu, editMenu } from "./../controller/menu.controller";
 
 const router = express.Router();
 
